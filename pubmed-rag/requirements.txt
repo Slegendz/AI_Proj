@@ -1,0 +1,9 @@
+flask
+biopython
+langchain
+langchain-google-genai
+langchain-community
+langchain-text-splitters
+chromadb
+python-dotenv
+google-generativeai

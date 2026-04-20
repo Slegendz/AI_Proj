@@ -1,33 +1,21 @@
-# PubMed RAG: AI Medical Research Assistant 🧬
+# RAG (Retreival Augmented Generation)
 
-A Retrieval-Augmented Generation (RAG) pipeline that fetches the latest medical research from PubMed and uses Google's Gemini LLM to provide structured, evidence-based summaries.
+Retreive => Get data from a source (e.g. Google, Wikipedia, PubMed, etc.)
+Augment => Use context from the retrieved data to generate a response (e.g. using LLM)
+Generate => Generate a response based on the retrieved data and the context provided.
 
-## 🚀 Overview
-This project addresses the challenge of keeping up with rapidly evolving medical literature. By connecting the **NCBI PubMed API** with **Google Gemini 1.5 Flash**, the system retrieves real-time abstracts, indexes them in a local vector database, and generates clinical summaries grounded in peer-reviewed data.
+## How RAG works
 
-## 🛠️ Key Features
-- **Real-time Retrieval:** No reliance on outdated training data; fetches current papers via Biopython.
-- **Semantic Search:** Uses `text-embedding-004` to find relevant context even if keywords don't match exactly.
-- **Precision Grounding:** Prevents AI hallucinations by forcing the LLM to answer using only retrieved abstracts.
-- **Clean Output:** Custom parsing logic to remove API metadata and "signature" artifacts for a professional report.
-- **Manual Batching:** Optimized for Google AI Free Tier to prevent rate-limit crashes.
+Components: Knowledge Source -> Text Chunking -> Embedding Model -> Vector Database -> Query Encoder -> Retriever -> Augmenter -> LLM (Generator) -> Updater
 
-## 🏗️ Technical Architecture
+![RAG Workflow](https://media.geeksforgeeks.org/wp-content/uploads/20250210190608027719/How-Rag-works.webp)
 
-
-1. **Ingestion:** Fetches XML data from PubMed based on user query.
-2. **Processing:** Splits text into 1000-character chunks with a 100-character overlap for context continuity.
-3. **Indexing:** Converts text to vectors and stores them in a **ChromaDB** collection.
-4. **Generation:** Retrieves the Top-3 most relevant chunks and feeds them to Gemini 1.5 Flash.
-
-## 📋 Prerequisites
-- Python 3.10+
-- Google AI Studio [API Key](https://aistudio.google.com/)
-- NCBI [API Key](https://pubmed.ncbi.nlm.nih.gov/settings/key/) (Required for stable PubMed access)
-
-## ⚙️ Installation & Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/Slegendz/AI_Proj.git](https://github.com/Slegendz/AI_Proj.git)
-   cd AI_Proj/pubmed-rag
+1. External Knowledge Source: Stores domain specific or general information like documents, APIs or databases.
+2. Text Chunking and Preprocessing: Breaks large text into smaller, manageable chunks and cleans it for consistency.
+3. Embedding Model: Converts text into numerical vectors that capture semantic meaning.
+4. Vector Database: Stores embeddings and enables similarity search for fast information retrieval.
+5. Query Encoder: Transforms the user’s query into a vector for comparison with stored embeddings.
+6. Retriever: Finds and returns the most relevant chunks from the database based on query similarity.
+7. Prompt Augmentation Layer: Combines retrieved chunks with the user’s query to provide context to the LLM.
+8. LLM (Generator): Generates a grounded response using both the query and retrieved knowledge.
+9. Updater (Optional): Regularly refreshes and re-embeds data to keep the knowledge base up to date
